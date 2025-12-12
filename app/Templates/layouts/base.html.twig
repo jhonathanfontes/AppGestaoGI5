@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<meta charset="UTF-8">
+		<title>{{ titulo ?? 'Sem Título' }}</title>
+
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+
+		{# CSS crítico injetado inline #}
+		{{ assets.inlineCss(module, company.slug ?? null) | raw }}
+
+		{# CSS: Global do sistema #}
+		{{ assets.globalCss() | raw }}
+
+		{# CSS: Específico do módulo (Dev/Prod) #}
+		{{ assets.devModuleCss(module) | raw }}
+		{{ assets.moduleCss(module) | raw }}
+
+		{# CSS: Tema da empresa (se aplicável) #}
+		{{ assets.themeCss(company.slug ?? null) | raw }}
+	</head>
+	<body>
+		<main>
+			{% block content %}{% endblock %}
+		</main>
+	</body>
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+	{# JS: Global do sistema #}
+	{{ assets.globalJs() | raw }}
+
+	{# JS: Específico do módulo (Dev/Prod) #}
+	{{ assets.devModuleJs(module) | raw }}
+	{{ assets.moduleJs(module) | raw }}
+</html>

@@ -1,0 +1,34 @@
+{# input.html.twig #}
+
+{% set id = id|default(name ~ '_' ~ random()) %}
+{% set type = type|default('text') %}
+
+<div class="mb-3">
+	{% if label is defined %}
+		<label for="{{ id }}" class="form-label">{{ label }}</label>
+	{% endif %}
+
+	<div class="input-group">
+		{% if icon is defined %}
+			<span class="input-group-text">
+				<i class="{{ icon }}"></i>
+			</span>
+		{% endif %}
+
+		<input id="{{ id }}" name="{{ name }}" type="{{ type }}" value="{{ value|default('') }}" {{ attributes.merge({ class: 'form-control ' ~ (isInvalid ? 'is-invalid' : '') } ) }}/>
+
+		{% if iconRight is defined %}
+			<span class="input-group-text">
+				<i class="{{ iconRight }}"></i>
+			</span>
+		{% endif %}
+	</div>
+
+	{% if help %}
+		<small class="form-text text-muted">{{ help }}</small>
+	{% endif %}
+
+	{% if error %}
+		<div class="invalid-feedback d-block">{{ error }}</div>
+	{% endif %}
+</div>

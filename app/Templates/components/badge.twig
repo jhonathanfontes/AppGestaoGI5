@@ -1,0 +1,5 @@
+{# badge.html.twig #}
+{% set variant = variant|default('primary') %}
+<span {{ attributes.merge({ class: "badge bg-" ~ variant ~ " " ~ attributes.class|default('') }) }}>
+    {{ slot }}
+</span>

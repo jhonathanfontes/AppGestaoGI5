@@ -1,0 +1,27 @@
+{% extends "layouts/base.html.twig" %}
+
+{% block content %}
+    <h1>Upload de Arquivos</h1>
+
+    <hr>
+
+    <h2>Upload de Avatar (Imagem)</h2>
+    <form action="/upload/do_upload" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="foto" class="form-label">Selecione uma imagem:</label>
+            <input type="file" name="foto" id="foto" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Avatar</button>
+    </form>
+
+    <hr>
+
+    <h2>Upload de Certificado (Documento)</h2>
+    <form action="/upload/do_upload_cert" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="certificado" class="form-label">Selecione um documento:</label>
+            <input type="file" name="certificado" id="certificado" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary">Enviar Certificado</button>
+    </form>
+{% endblock %}

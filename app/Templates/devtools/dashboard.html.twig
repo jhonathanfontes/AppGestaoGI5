@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>DevTools Dashboard</title>
+		<style>
+			body {
+				font-family: Arial, sans-serif;
+				background: #1b1b1b;
+				color: #f0f0f0;
+				padding: 30px;
+			}
+			h1 {
+				color: #6cc24a;
+			}
+			.card {
+				background: #2a2a2a;
+				padding: 20px;
+				margin-bottom: 15px;
+				border-radius: 8px;
+			}
+			button {
+				padding: 10px 20px;
+				background: #6cc24a;
+				color: black;
+				border: none;
+				border-radius: 5px;
+				cursor: pointer;
+				font-weight: bold;
+			}
+			pre {
+				background: #111;
+				padding: 10px;
+				border-radius: 5px;
+				white-space: pre-wrap;
+			}
+		</style>
+	</head>
+	<body>
+
+		<h1>⚙️ Dev Tools Dashboard</h1>
+
+		<div class="card">
+			<h2>🔧 Build de Assets</h2>
+			<button onclick="runBuild()">Executar Build</button>
+			<pre id="buildOutput"></pre>
+		</div>
+
+		<div class="card">
+			<h2>🧹 Limpar Cache do Twig</h2>
+			<button onclick="clearCache()">Limpar Cache</button>
+			<pre id="cacheOutput"></pre>
+		</div>
+
+		<div class="card">
+			<h2>📦 Status dos Módulos</h2>
+			<button onclick="getStatus()">Carregar Status</button>
+			<pre id="statusOutput"></pre>
+		</div>
+
+		<script>
+			async function runBuild() {
+const res = await fetch("/dev-tools/build");
+const json = await res.json();
+document.getElementById("buildOutput").innerText = JSON.stringify(json, null, 2);
+}
+
+async function clearCache() {
+const res = await fetch("/dev-tools/clear-cache");
+const json = await res.json();
+document.getElementById("cacheOutput").innerText = JSON.stringify(json, null, 2);
+}
+
+async function getStatus() {
+const res = await fetch("/dev-tools/status");
+const json = await res.json();
+document.getElementById("statusOutput").innerText = JSON.stringify(json, null, 2);
+}
+		</script>
+
+	</body>
+</html>

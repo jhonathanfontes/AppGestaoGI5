@@ -1,0 +1,22 @@
+{# modal.html.twig #}
+
+<div class="modal fade" id="{{ id }}" tabindex="-1">
+	<div class="modal-dialog {{ size|default('') }}">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">{{ title }}</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+			</div>
+
+			<div class="modal-body">
+				{{ slot|raw }}
+			</div>
+
+			{% if footer is defined %}
+				<div class="modal-footer">
+					{{ footer|raw }}
+				</div>
+			{% endif %}
+		</div>
+	</div>
+</div>

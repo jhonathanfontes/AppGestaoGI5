@@ -1,0 +1,16 @@
+{# card.html.twig #}
+<div {{ attributes.merge({ class: 'card shadow-sm ' ~ (attributes.class|default('')) } ) }}>
+	{% if title is defined %}
+		<div class="card-header fw-bold">{{ title }}</div>
+	{% endif %}
+
+	<div class="card-body">
+		{{ slot|raw }}
+	</div>
+
+	{% if footer is defined %}
+		<div class="card-footer">
+			{{ footer|raw }}
+		</div>
+	{% endif %}
+</div>

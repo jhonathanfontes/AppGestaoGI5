@@ -1,0 +1,23 @@
+{# select.html.twig #}
+
+<div class="mb-3">
+	{% if label %}
+		<label class="form-label">{{ label }}</label>
+	{% endif %}
+
+	<select {{ attributes.merge({ class: 'form-select ' ~ attributes.class|default('') } ) }} name="{{ name }}">
+		{% if placeholder %}
+			<option value="">{{ placeholder }}</option>
+		{% endif %}
+
+		{% for key, text in options %}
+			<option value="{{ key }}" {{ key == value ? 'selected' : '' }}>
+				{{ text }}
+			</option>
+		{% endfor %}
+	</select>
+
+	{% if error %}
+		<div class="invalid-feedback d-block">{{ error }}</div>
+	{% endif %}
+</div>

@@ -1,0 +1,52 @@
+{# app/Views/components/button.html.twig #}
+
+{#
+Props suportadas:
+- variant   → primary, secondary, success, danger, warning, info, light, dark, outline-primary...
+- size      → sm, md, lg
+- icon      → nome da classe do ícone (ex: "bi bi-plus", "fa fa-edit")
+- iconRight → ícone no lado direito
+- loading   → true/false
+- href      → se fornecido, vira um <a> em vez de <button>
+- disabled  → booleano
+#}
+
+{% set variant = variant|default('primary') %}
+{% set sizeClass = size == 'sm' ? 'btn-sm' : (size == 'lg' ? 'btn-lg' : '') %}
+{% set isOutline = variant starts with 'outline-' %}
+{% set btnClass = isOutline ? 'btn btn-' ~ variant : 'btn btn-' ~ variant %}
+
+{% set finalClass = btnClass ~ ' ' ~ sizeClass ~ ' ' ~ (attributes.class|default('')) %}
+
+{% set disabledAttr = loading or disabled ? 'disabled' : '' %}
+{% set typeAttr = attributes.type|default('button') %}
+
+{% set spinner = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>' %}
+
+{# Se tiver href, vira <a> #}
+	{% if href is defined and href %}
+		<a href="{{ href }}" {{ attributes.merge({ class: finalClass } ) }} {{ disabledAttr }}> {% if loading %}
+			{{ spinner|raw }}
+		{% endif %}
+		{% if icon %}
+			<i class="{{ icon }} me-2"></i>
+		{% endif %}
+		{{ slot|default('Button')|raw }}
+		{% if iconRight %}
+			<i class="{{ iconRight }} ms-2"></i>
+		{% endif %}
+	</a>
+{% else %}
+	<button {{ attributes.merge({ type: typeAttr, class: finalClass } ) }} {{ disabledAttr }}>
+		{% if loading %}
+			{{ spinner|raw }}
+		{% endif %}
+		{% if icon %}
+			<i class="{{ icon }} me-2"></i>
+		{% endif %}
+		{{ slot|default('Button')|raw }}
+		{% if iconRight %}
+			<i class="{{ iconRight }} ms-2"></i>
+		{% endif %}
+	</button>
+{% endif %}

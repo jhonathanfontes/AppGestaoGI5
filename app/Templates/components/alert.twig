@@ -1,0 +1,9 @@
+{# alert.html.twig #}
+{% set variant = variant|default('primary') %}
+<div {{ attributes.merge({ class: "alert alert-" ~ variant ~ " d-flex justify-content-between align-items-center" } ) }}>
+	<span>{{ slot }}</span>
+
+	{% if dismissible %}
+		<button class="btn-close ms-3" data-bs-dismiss="alert"></button>
+	{% endif %}
+</div>

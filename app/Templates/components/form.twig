@@ -1,0 +1,7 @@
+{# form.html.twig #}
+
+<form method="{{ method|default('POST') }}" action="{{ action|default('') }}" {{ attributes }}>
+    {{ csrf_field|default('')|raw }}
+
+    {{ slot|raw }}
+</form>
