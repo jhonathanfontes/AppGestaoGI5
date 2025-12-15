@@ -1,0 +1,17 @@
+@media (min-width: 992px) {
+
+    .view-navbar{
+        margin-top: 70px;
+        margin-bottom: 9px;
+    }
+
+    .h1-title {
+        font-weight:600;
+        color: #000000 !important;
+        font-size: 22px;
+        padding-left: 0px;
+        padding-bottom: 5px;
+        padding-top: 10px;
+    }
+
+}

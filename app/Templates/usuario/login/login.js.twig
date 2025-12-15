@@ -1,0 +1,50 @@
+/**
+ * LOGIN USUARIO
+ */
+async function loginusuario() {
+    // Verificar conexão
+    if (!navigator.onLine) {
+        alertError('Sem internet');
+        return;
+    }
+
+    // Validar formulário
+    validaForm();
+    const senhaValida = document.querySelector("#senha").checkValidity();
+    const cpfValido = document.querySelector("#cpf").checkValidity();
+
+    if (!senhaValida || !cpfValido) {
+        alertError('Preencha todos os campos corretamente!');
+        return;
+    }
+
+    // Ativa o botão de “carregamento”
+    const textoBotao = await clickBotaoProgressAtivo("btnLoginEntrar");
+
+    try {
+        const cpf = document.getElementById("cpf").value;
+        const senha = document.getElementById("senha").value;
+        const csrf = document.getElementById("csrf").value;
+
+        // Monta o corpo JSON
+        const body = JSON.stringify({ cpf, senha, csrf });
+
+        // Chama a API de login
+        const data = await requisicaoHttp("/api/usuario/login", "POST", body);
+
+        // Verifica se veio erro ou se faltam campos importantes
+        if (!data.error && data.token && data.codusuario) {
+            window.location.href = data.redireciona || "/";
+        } else {
+            // Reseta o campo de senha
+            document.getElementById("senha").value = "";
+            alertError(data.message || "Ocorreu um erro durante o login.");
+        }
+    } catch (error) {
+        // Se algo falhar (erro de rede, servidor indisponível, etc.)
+        alertError("Tente novamente mais tarde!");
+    } finally {
+        // Restaura o botão
+        clickBotaoProgressInativo("btnLoginEntrar", textoBotao);
+    }
+}

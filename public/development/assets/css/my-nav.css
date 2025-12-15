@@ -1,0 +1,14 @@
+.nav-tabs .nav-item .nav-link.active {
+    font-weight: 600;
+}
+.nav-tabs .nav-link {
+    color: var(--mycolor-secondary);
+}
+.nav-tabs .nav-link:hover {
+    color: var(--mycolor-black-white);
+}
+
+.nav-tabs .nav-item .nav-link:hover
+{
+    background: var(--mycolor-light) !important;
+}

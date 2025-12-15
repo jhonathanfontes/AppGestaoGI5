@@ -1,0 +1,22 @@
+:root {
+    --mycolor-primary: #F46434;
+    --mycolor-primary-hover: #d83600;
+    --mycolor-secondary: #676767;
+    --mycolor-link: #F46434;
+    --mycolor-navbar: #F46434;
+    --mycolor-bg: #F5F6FA;
+    --mycolor-card: #FFFFFF;
+    --mycolor-black-white: #000000;
+    --mycolor-light: #ececec;
+}    
+.dark-mode:root {
+    --mycolor-primary: #BB86FC;
+    --mycolor-primary-hover: #d4b1fa;
+    --mycolor-secondary: #aeaeae;
+    --mycolor-link: #BB86FC;
+    --mycolor-navbar: #1F252F;
+    --mycolor-bg: #0D111E;
+    --mycolor-card: #1F252F;
+    --mycolor-black-white: #FFFFFF;
+
+}

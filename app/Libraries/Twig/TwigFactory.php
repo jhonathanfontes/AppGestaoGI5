@@ -55,6 +55,7 @@ class TwigFactory
             // Variáveis globais automáticas
             self::$instance->addGlobal('baseURL', config('App')->baseURL);
             self::$instance->addGlobal('env', ENVIRONMENT);
+            self::$instance->addGlobal('assets', new \App\Services\AssetManager());
 
             // Versões opcionais do .env
             self::$instance->addGlobal('cssVersion', getenv('app.cssVersion') ?: '1.0.0');

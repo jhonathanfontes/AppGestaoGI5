@@ -2,26 +2,22 @@
 namespace App\Controllers\Site;
 
 use App\Controllers\BaseController;
-use App\Libraries\Twig\TwigRenderer;
+use App\Libraries\Twig\TwigFactory;
 
 class Home extends BaseController
 {
-    public function index()
-    {
-        $renderer = new TwigRenderer();
+    protected $twig;
 
-        return $renderer->render('home', [
-            'titulo' => 'Página Inicial',
-            'usuario' => ['nome' => 'Rafael']
-        ]);
+    public function __construct()
+    {
+        $this->twig = TwigFactory::get();
     }
 
-    public function moduloHome()
+    public function index()
     {
-        $renderer = new TwigRenderer();
-
-        return $renderer->render('modulo/home', [
-            'titulo' => 'Home do Módulo'
+        return $this->twig->render('home.html.twig', [
+            'titulo' => 'Página Inicial',
+            'usuario' => session('user')
         ]);
     }
 }

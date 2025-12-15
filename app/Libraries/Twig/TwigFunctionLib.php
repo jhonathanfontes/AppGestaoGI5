@@ -35,6 +35,19 @@ class TwigFunctionLib
             site_url($path)
         ));
 
+        // Adiciona a função old()
+        $twig->addFunction(new TwigFunction('old', function ($key, $default = null) {
+            return old($key, $default);
+        }));
+
+        // Adiciona a função session()
+        $twig->addFunction(new TwigFunction('session', function ($key = null) {
+            if ($key === null) {
+                return session();
+            }
+            return session($key);
+        }));
+
         return $twig;
     }
 }

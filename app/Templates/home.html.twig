@@ -5,4 +5,44 @@
     <p>Bem-vindo, {{ usuario.nome }}!</p>
 
     <hr>
+
+	{{ dump(assets) }}
+
+	<h1 class="mb-4">Demonstração Completa</h1>
+
+	<x-card title="Botões">
+		<x-button variant="primary">Primary</x-button>
+		<x-button variant="success" icon="bi bi-check">Success</x-button>
+		<x-button variant="outline-danger" iconright="bi bi-trash">Excluir</x-button>
+		<x-button loading="true">Carregando</x-button>
+	</x-card>
+
+	<x-card title="Inputs">
+		<x-input label="Nome" name="nome" icon="bi bi-person"/>
+		<x-input label="Email" name="email" type="email" iconright="bi bi-envelope"/>
+	</x-card>
+
+	<x-card title="Alerta">
+		<x-alert variant="warning" dismissible="true">Atenção!</x-alert>
+	</x-card>
+
+	<x-card title="Avatar">
+		<x-avatar name="Jonathan"/>
+		<x-avatar src="/images/user.png" size="60"/>
+	</x-card>
+
+	<x-card title="Modal">
+		<x-button variant="primary" data-bs-toggle="modal" data-bs-target="#modalTeste">
+			Abrir Modal
+		</x-button>
+
+		<x-modal id="modalTeste" title="Confirmação">
+			Deseja continuar?
+			<x-slot name="footer">
+				<x-button variant="secondary" data-bs-dismiss="modal">Fechar</x-button>
+				<x-button variant="primary">Confirmar</x-button>
+			</x-slot>
+		</x-modal>
+	</x-card>
+
 {% endblock %}

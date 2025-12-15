@@ -1,0 +1,21 @@
+.navbar-bg {
+    height: 60px;
+    /*left: 0px;*/
+    /*z-index: 999;*/
+    background: var(--mycolor-navbar);
+    /*top: 0;*/
+    transition: top 0.3s ease-in-out;
+    /*box-shadow: inset 0 -1px 0 #dcdcdc;*/
+    box-shadow: 2px 2px 2px rgb(217, 217, 217);
+}
+
+.dark-mode .navbar-bg {
+    box-shadow: none;
+}
+
+.nav-up {
+    top: -60px;
+    transition: top 0.3s ease-in;
+
+}
+

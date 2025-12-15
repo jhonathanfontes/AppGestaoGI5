@@ -84,7 +84,7 @@ class AssetManager
     /**
      * Gera a tag de CSS para um módulo específico (apenas em produção).
      */
-    public function moduleCss(string $module): string
+    public function moduleCss(?string $module): string
     {
         if ($module === 'default' || empty($module) || ENVIRONMENT === 'development') {
             return '';
@@ -107,7 +107,7 @@ class AssetManager
     /**
      * Gera a tag de JS para um módulo específico (apenas em produção).
      */
-    public function moduleJs(string $module): string
+    public function moduleJs(?string $module): string
     {
         if ($module === 'default' || empty($module) || ENVIRONMENT === 'development') {
             return '';
@@ -130,7 +130,7 @@ class AssetManager
     /**
      * Em ambiente de desenvolvimento, carrega CSS de um módulo específico.
      */
-    public function devModuleCss(string $module): string
+    public function devModuleCss(?string $module): string
     {
         if (ENVIRONMENT !== 'development' || $module === 'default' || empty($module)) {
             return '';
@@ -154,7 +154,7 @@ class AssetManager
     /**
      * Em ambiente de desenvolvimento, carrega JS de um módulo específico.
      */
-    public function devModuleJs(string $module): string
+    public function devModuleJs(?string $module): string
     {
         if (ENVIRONMENT !== 'development' || $module === 'default' || empty($module)) {
             return '';

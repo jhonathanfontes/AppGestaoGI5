@@ -1,0 +1,47 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+/*FONTE DOS TEXTOS*/
+* {
+    font-family: "Montserrat", sans-serif !important;
+}
+
+button {
+    font-family: "Montserrat", sans-serif !important;
+
+}
+a {
+    font-family: "Montserrat", sans-serif !important;
+}
+
+
+/*FOOTER NO FINAL DA TELA*/
+body {
+    background: var(--mycolor-bg);
+    height:100vh;
+    margin:0;
+    font-size: 14px;
+}
+footer{ min-height:50px;}
+body{display:flex; flex-direction:column;}
+footer{margin-top:auto; !important;}
+
+.main{
+    margin-top: 97px
+}
+
+.h1-title {
+    font-weight: 600;
+    color: #000000 !important;
+    font-size: 22px;
+    padding-left: 0;
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
+
+.dark-mode .h1-title {
+    color: #FFF !important;
+}
+
+.view-navbar{
+    margin-top: 70px;
+    margin-bottom: 9px;
+}
