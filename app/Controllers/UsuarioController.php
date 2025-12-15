@@ -44,4 +44,46 @@ class UsuarioController extends BaseController
         session()->destroy();
         return redirect()->to('/');
     }
+
+    public function index()
+    {
+        $userModel = new UsuarioModel();
+        $users = $userModel->findAll();
+
+        return $this->twig->render('usuario/index.html.twig', [
+            'titulo' => 'Listagem de Usuários',
+            'users' => $users
+        ]);
+    }
+
+    public function new()
+    {
+        return $this->twig->render('usuario/new.html.twig', [
+            'titulo' => 'Novo Usuário'
+        ]);
+    }
+
+    public function create()
+    {
+        $data = [
+            'email' => $this->request->getPost('email'),
+            'password' => $this->request->getPost('password'),
+        ];
+
+        $userModel = new UsuarioModel();
+
+        try {
+            if ($userModel->insert($data) === false) {
+                return redirect()->back()->withInput()->with('errors', $userModel->errors());
+            }
+        } catch (\Exception $e) {
+            log_message('error', 'Erro ao inserir usuário: ' . $e->getMessage());
+            if (ENVIRONMENT === 'development') {
+                return redirect()->back()->withInput()->with('error', $e->getMessage());
+            }
+            return redirect()->back()->withInput()->with('error', 'Ocorreu um erro inesperado ao salvar o usuário. Por favor, contate o suporte.');
+        }
+
+        return redirect()->to('/configuracao/usuarios');
+    }
 }

@@ -1,0 +1,83 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titulo }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if session('error') %}
+                        <x-alert variant="danger" dismissible="true">
+                            {{ session('error') }}
+                        </x-alert>
+                    {% endif %}
+
+                    <form action="/pessoas/create" method="post">
+                        {{ csrf_field() | raw }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nome">Nome</label>
+                                    <input type="text" name="nome" id="nome" class="form-control" value="{{ old('nome') }}" required>
+                                    {% if session('errors.nome') %}<div class="text-danger">{{ session('errors.nome') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+                                    {% if session('errors.email') %}<div class="text-danger">{{ session('errors.email') }}</div>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cpf_cnpj">CPF/CNPJ</label>
+                                    <input type="text" name="cpf_cnpj" id="cpf_cnpj" class="form-control" value="{{ old('cpf_cnpj') }}" required>
+                                    {% if session('errors.cpf_cnpj') %}<div class="text-danger">{{ session('errors.cpf_cnpj') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="rg_ie">RG/IE</label>
+                                    <input type="text" name="rg_ie" id="rg_ie" class="form-control" value="{{ old('rg_ie') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="data_nascimento">Data de Nascimento</label>
+                                    <input type="date" name="data_nascimento" id="data_nascimento" class="form-control" value="{{ old('data_nascimento') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tipo">Tipo</label>
+                                    <select name="tipo" id="tipo" class="form-control" required>
+                                        <option value="fisica" {{ old('tipo') == 'fisica' ? 'selected' : '' }}>Pessoa Física</option>
+                                        <option value="juridica" {{ old('tipo') == 'juridica' ? 'selected' : '' }}>Pessoa Jurídica</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="empresa_id">ID da Empresa</label>
+                                    <input type="text" name="empresa_id" id="empresa_id" class="form-control" value="{{ old('empresa_id') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

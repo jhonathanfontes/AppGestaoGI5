@@ -1,0 +1,47 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titulo }}</h3>
+                    <div class="card-tools">
+                        <a href="/empresas/new" class="btn btn-primary">Nova Empresa</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Razão Social</th>
+                                <th>Nome Fantasia</th>
+                                <th>CNPJ</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for empresa in empresas %}
+                                <tr>
+                                    <td>{{ empresa.id }}</td>
+                                    <td>{{ empresa.razao_social }}</td>
+                                    <td>{{ empresa.nome_fantasia }}</td>
+                                    <td>{{ empresa.cnpj }}</td>
+                                    <td>{{ empresa.email }}</td>
+                                    <td>{{ empresa.telefone }}</td>
+                                    <td>
+                                        <a href="/empresas/edit/{{ empresa.id }}" class="btn btn-sm btn-warning">Editar</a>
+                                        <a href="/empresas/delete/{{ empresa.id }}" class="btn btn-sm btn-danger">Excluir</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,40 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const cnpjInput = document.getElementById('cnpj');
+    if (!cnpjInput) {
+        return;
+    }
+
+    cnpjInput.addEventListener('blur', function () {
+        const cnpj = this.value.replace(/[^0-9]/g, '');
+
+        if (cnpj.length !== 14) {
+            return; // CNPJ inválido
+        }
+
+        fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('CNPJ não encontrado ou inválido.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Preencher os campos do formulário
+                document.getElementById('razao_social').value = data.razao_social || '';
+                document.getElementById('nome_fantasia').value = data.nome_fantasia || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('telefone').value = data.ddd_telefone_1 || '';
+                document.getElementById('cep').value = data.cep || '';
+                document.getElementById('logradouro').value = data.logradouro || '';
+                document.getElementById('numero').value = data.numero || '';
+                document.getElementById('complemento').value = data.complemento || '';
+                document.getElementById('bairro').value = data.bairro || '';
+                document.getElementById('municipio').value = data.municipio || '';
+                document.getElementById('uf').value = data.uf || '';
+                // ... adicione outros campos conforme necessário
+            })
+            .catch(error => {
+                alert(error.message);
+            });
+    });
+});

@@ -8,7 +8,18 @@ class UsuarioModel extends Model
 {
     protected $table = 'usuarios';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['nome', 'email', 'password'];
+    protected $allowedFields = ['email', 'password'];
+
+    protected $validationRules = [
+        'email' => 'required|valid_email|is_unique[usuarios.email]',
+        'password' => 'required',
+    ];
+
+    protected $validationMessages = [
+        'email' => [
+            'is_unique' => 'Este email já está em uso. Por favor, escolha outro.',
+        ],
+    ];
 
     protected $beforeInsert = ['hashPassword'];
 

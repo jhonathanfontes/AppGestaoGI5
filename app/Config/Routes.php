@@ -14,9 +14,25 @@ $routes->get('logout', 'UsuarioController::logout');
 $routes->get('/', 'Home::index');
  
  // Rotas protegidas
-$routes->group('/', ['filter' => 'auth'], function ($routes) {
+// $routes->group('/', ['filter' => 'auth'], function ($routes) {
+$routes->group('/', function ($routes) {
     $routes->get('home', 'Site\Home::index');
     $routes->get('dashboard', 'Site\Home::index');
+
+    // Rotas de configuração de usuários
+    $routes->get('configuracao/usuarios', 'UsuarioController::index');
+    $routes->get('configuracao/usuarios/new', 'UsuarioController::new');
+    $routes->post('configuracao/usuarios/create', 'UsuarioController::create');
+
+    // Rotas de Pessoas
+    $routes->get('pessoas', 'PessoaController::index');
+    $routes->get('pessoas/new', 'PessoaController::new');
+    $routes->post('pessoas/create', 'PessoaController::create');
+
+    // Rotas de Empresas
+    $routes->get('empresas', 'EmpresaController::index');
+    $routes->get('empresas/new', 'EmpresaController::new');
+    $routes->post('empresas/create', 'EmpresaController::create');
 
     // Outras rotas protegidas...
     $routes->get('tools/build-assets', 'Tools\Assets::build');

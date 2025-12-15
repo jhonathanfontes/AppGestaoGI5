@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titulo }}</h3>
+                    <div class="card-tools">
+                        <a href="/pessoas/new" class="btn btn-primary">Nova Pessoa</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>CPF/CNPJ</th>
+                                <th>Tipo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pessoa in pessoas %}
+                                <tr>
+                                    <td>{{ pessoa.id }}</td>
+                                    <td>{{ pessoa.nome }}</td>
+                                    <td>{{ pessoa.email }}</td>
+                                    <td>{{ pessoa.cpf_cnpj }}</td>
+                                    <td>{{ pessoa.tipo }}</td>
+                                    <td>
+                                        <a href="/pessoas/edit/{{ pessoa.id }}" class="btn btn-sm btn-warning">Editar</a>
+                                        <a href="/pessoas/delete/{{ pessoa.id }}" class="btn btn-sm btn-danger">Excluir</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

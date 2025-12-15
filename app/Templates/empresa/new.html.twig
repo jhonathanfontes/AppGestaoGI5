@@ -1,0 +1,231 @@
+{% extends 'layouts/base.html.twig' %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">{{ titulo }}</h3>
+                </div>
+                <div class="card-body">
+                    {% if session('error') %}
+                        <x-alert variant="danger" dismissible="true">
+                            {{ session('error') }}
+                        </x-alert>
+                    {% endif %}
+
+                    <form action="/empresas/create" method="post">
+                        {{ csrf_field() | raw }}
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="razao_social">Razão Social</label>
+                                    <input type="text" name="razao_social" id="razao_social" class="form-control" value="{{ old('razao_social') }}" required>
+                                    {% if session('errors.razao_social') %}<div class="text-danger">{{ session('errors.razao_social') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="nome_fantasia">Nome Fantasia</label>
+                                    <input type="text" name="nome_fantasia" id="nome_fantasia" class="form-control" value="{{ old('nome_fantasia') }}" required>
+                                    {% if session('errors.nome_fantasia') %}<div class="text-danger">{{ session('errors.nome_fantasia') }}</div>{% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="cnpj">CNPJ</label>
+                                    <input type="text" name="cnpj" id="cnpj" class="form-control" value="{{ old('cnpj') }}" required>
+                                    {% if session('errors.cnpj') %}<div class="text-danger">{{ session('errors.cnpj') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="inscricao_estadual">Inscrição Estadual</label>
+                                    <input type="text" name="inscricao_estadual" id="inscricao_estadual" class="form-control" value="{{ old('inscricao_estadual') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="inscricao_municipal">Inscrição Municipal</label>
+                                    <input type="text" name="inscricao_municipal" id="inscricao_municipal" class="form-control" value="{{ old('inscricao_municipal') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" value="{{ old('email') }}" required>
+                                    {% if session('errors.email') %}<div class="text-danger">{{ session('errors.email') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="telefone">Telefone</label>
+                                    <input type="text" name="telefone" id="telefone" class="form-control" value="{{ old('telefone') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="site">Site</label>
+                                    <input type="url" name="site" id="site" class="form-control" value="{{ old('site') }}">
+                                    {% if session('errors.site') %}<div class="text-danger">{{ session('errors.site') }}</div>{% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="logo_relatorio">Logo para Relatório (URL/Caminho)</label>
+                                    <input type="text" name="logo_relatorio" id="logo_relatorio" class="form-control" value="{{ old('logo_relatorio') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <h5>Endereço</h5>
+
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="cep">CEP</label>
+                                    <input type="text" name="cep" id="cep" class="form-control" value="{{ old('cep') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-7">
+                                <div class="form-group">
+                                    <label for="logradouro">Logradouro</label>
+                                    <input type="text" name="logradouro" id="logradouro" class="form-control" value="{{ old('logradouro') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="numero">Número</label>
+                                    <input type="text" name="numero" id="numero" class="form-control" value="{{ old('numero') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="complemento">Complemento</label>
+                                    <input type="text" name="complemento" id="complemento" class="form-control" value="{{ old('complemento') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="bairro">Bairro</label>
+                                    <input type="text" name="bairro" id="bairro" class="form-control" value="{{ old('bairro') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="municipio">Município</label>
+                                    <input type="text" name="municipio" id="municipio" class="form-control" value="{{ old('municipio') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-1">
+                                <div class="form-group">
+                                    <label for="uf">UF</label>
+                                    <input type="text" name="uf" id="uf" class="form-control" value="{{ old('uf') }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="plano_id">ID do Plano</label>
+                                    <input type="text" name="plano_id" id="plano_id" class="form-control" value="{{ old('plano_id') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="data_expiracao">Data de Expiração</label>
+                                    <input type="date" name="data_expiracao" id="data_expiracao" class="form-control" value="{{ old('data_expiracao') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Ativo</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" name="ativo" id="ativo" class="form-check-input" {{ old('ativo') == 'on' ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="ativo">Sim</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary mt-3">Salvar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cnpjInput = document.getElementById('cnpj');
+    if (!cnpjInput) {
+        return;
+    }
+
+    cnpjInput.addEventListener('blur', function () {
+        const cnpj = this.value.replace(/[^0-9]/g, '');
+
+        if (cnpj.length !== 14) {
+            return; // CNPJ inválido
+        }
+
+        // Adiciona um feedback de carregamento
+        this.disabled = true;
+        const button = document.querySelector('button[type="submit"]');
+        button.disabled = true;
+        button.innerHTML = 'Buscando CNPJ...';
+
+
+        fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('CNPJ não encontrado ou inválido.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Preencher os campos do formulário
+                document.getElementById('razao_social').value = data.razao_social || '';
+                document.getElementById('nome_fantasia').value = data.nome_fantasia || '';
+                document.getElementById('email').value = data.email || '';
+                document.getElementById('telefone').value = data.ddd_telefone_1 || '';
+                document.getElementById('cep').value = data.cep || '';
+                document.getElementById('logradouro').value = data.logradouro || '';
+                document.getElementById('numero').value = data.numero || '';
+                document.getElementById('complemento').value = data.complemento || '';
+                document.getElementById('bairro').value = data.bairro || '';
+                document.getElementById('municipio').value = data.municipio || '';
+                document.getElementById('uf').value = data.uf || '';
+            })
+            .catch(error => {
+                alert(error.message);
+            })
+            .finally(() => {
+                // Restaura o estado normal
+                this.disabled = false;
+                button.disabled = false;
+                button.innerHTML = 'Salvar';
+            });
+    });
+});
+</script>
+{% endblock %}
