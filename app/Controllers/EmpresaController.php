@@ -35,37 +35,43 @@ class EmpresaController extends BaseController
 
     public function create()
     {
-        $data = [
-            'razao_social' => $this->request->getPost('razao_social'),
-            'nome_fantasia' => $this->request->getPost('nome_fantasia'),
-            'cnpj' => $this->request->getPost('cnpj'),
-            'inscricao_estadual' => $this->request->getPost('inscricao_estadual'),
-            'inscricao_municipal' => $this->request->getPost('inscricao_municipal'),
-            'email' => $this->request->getPost('email'),
-            'telefone' => $this->request->getPost('telefone'),
-            'site' => $this->request->getPost('site'),
-            'logo_relatorio' => $this->request->getPost('logo_relatorio'),
-            'plano_id' => $this->request->getPost('plano_id'),
-            'data_expiracao' => $this->request->getPost('data_expiracao'),
-            'ativo' => $this->request->getPost('ativo') === 'on' ? true : false, // Checkbox
-            'cep' => $this->request->getPost('cep'),
-            'logradouro' => $this->request->getPost('logradouro'),
-            'numero' => $this->request->getPost('numero'),
-            'complemento' => $this->request->getPost('complemento'),
-            'bairro' => $this->request->getPost('bairro'),
-            'municipio' => $this->request->getPost('municipio'),
-            'uf' => $this->request->getPost('uf'),
-        ];
+        // Pega os dados da requisição (JSON)
+        $data = $this->request->getJSON(true);
 
         // Adicionar o usuário logado como criador
         $data['criado_por'] = session('user.id');
 
         $empresaModel = new EmpresaModel();
 
-        if ($empresaModel->insert($data) === false) {
-            return redirect()->back()->withInput()->with('errors', $empresaModel->errors());
-        }
+        try {
+            if ($empresaModel->insert($data) === false) {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Erro de validação',
+                    'data' => $empresaModel->errors(),
+                    'code' => 422
+                ];
+                return $this->response->setJSON($response)->setStatusCode(422);
+            }
 
-        return redirect()->to('/empresas');
+            $newEmpresaId = $empresaModel->getInsertID();
+            $empresa = $empresaModel->find($newEmpresaId);
+
+            $response = [
+                'status' => 'success',
+                'message' => 'Empresa criada com sucesso!',
+                'data' => $empresa
+            ];
+            return $this->response->setJSON($response);
+
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Ocorreu um erro inesperado',
+                'data' => (ENVIRONMENT === 'development') ? $e->getMessage() : null,
+                'code' => 500
+            ];
+            return $this->response->setJSON($response)->setStatusCode(500);
+        }
     }
 }

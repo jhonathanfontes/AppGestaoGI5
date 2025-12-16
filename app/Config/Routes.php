@@ -12,6 +12,12 @@ $routes->post('login', 'UsuarioController::doLogin');
 $routes->get('logout', 'UsuarioController::logout');
 
 $routes->get('/', 'Home::index');
+
+$routes->get('test-response', function () {
+    return service('responseService')->success([
+        'teste' => 'ok'
+    ]);
+});
  
  // Rotas protegidas
 // $routes->group('/', ['filter' => 'auth'], function ($routes) {

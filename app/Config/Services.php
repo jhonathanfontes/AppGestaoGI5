@@ -27,4 +27,13 @@ class Services extends BaseService
 
         return new \App\Services\AssetManager();
     }
+
+    public static function responseService(bool $getShared = true)
+    {
+        if ($getShared) {
+            return static::getSharedInstance('responseService');
+        }
+
+        return new \App\Services\ResponseService(service('response'));
+    }
 }

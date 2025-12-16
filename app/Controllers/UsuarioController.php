@@ -65,25 +65,49 @@ class UsuarioController extends BaseController
 
     public function create()
     {
-        $data = [
-            'email' => $this->request->getPost('email'),
-            'password' => $this->request->getPost('password'),
-        ];
+        // Pega os dados da requisição (JSON)
+        $data = $this->request->getJSON(true);
+        
+        // Renomeia 'password' para 'senha' para consistência com o novo schema
+        if(isset($data['password'])) {
+            $data['senha'] = $data['password'];
+            unset($data['password']);
+        }
+
+        // Adicionar o usuário logado como criador
+        $data['criado_por'] = session('user.id');
 
         $userModel = new UsuarioModel();
 
         try {
             if ($userModel->insert($data) === false) {
-                return redirect()->back()->withInput()->with('errors', $userModel->errors());
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Erro de validação',
+                    'data' => $userModel->errors(),
+                    'code' => 422
+                ];
+                return $this->response->setJSON($response)->setStatusCode(422);
             }
-        } catch (\Exception $e) {
-            log_message('error', 'Erro ao inserir usuário: ' . $e->getMessage());
-            if (ENVIRONMENT === 'development') {
-                return redirect()->back()->withInput()->with('error', $e->getMessage());
-            }
-            return redirect()->back()->withInput()->with('error', 'Ocorreu um erro inesperado ao salvar o usuário. Por favor, contate o suporte.');
-        }
 
-        return redirect()->to('/configuracao/usuarios');
+            $newUserId = $userModel->getInsertID();
+            $user = $userModel->find($newUserId);
+
+            $response = [
+                'status' => 'success',
+                'message' => 'Usuário criado com sucesso!',
+                'data' => $user
+            ];
+            return $this->response->setJSON($response);
+
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Ocorreu um erro inesperado',
+                'data' => (ENVIRONMENT === 'development') ? $e->getMessage() : null,
+                'code' => 500
+            ];
+            return $this->response->setJSON($response)->setStatusCode(500);
+        }
     }
 }

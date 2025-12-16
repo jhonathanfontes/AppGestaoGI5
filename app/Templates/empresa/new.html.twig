@@ -176,56 +176,107 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
     const cnpjInput = document.getElementById('cnpj');
-    if (!cnpjInput) {
-        return;
+
+    // CNPJ Lookup Logic
+    if (cnpjInput) {
+        cnpjInput.addEventListener('blur', function () {
+            const cnpj = this.value.replace(/[^0-9]/g, '');
+            if (cnpj.length !== 14) return;
+
+            const button = form.querySelector('button[type="submit"]');
+            this.disabled = true;
+            button.disabled = true;
+            button.innerHTML = 'Buscando CNPJ...';
+
+            fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
+                .then(response => response.ok ? response.json() : Promise.reject('CNPJ não encontrado.'))
+                .then(data => {
+                    document.getElementById('razao_social').value = data.razao_social || '';
+                    document.getElementById('nome_fantasia').value = data.nome_fantasia || '';
+                    document.getElementById('email').value = data.email || '';
+                    document.getElementById('telefone').value = data.ddd_telefone_1 || '';
+                    document.getElementById('cep').value = data.cep || '';
+                    document.getElementById('logradouro').value = data.logradouro || '';
+                    document.getElementById('numero').value = data.numero || '';
+                    document.getElementById('complemento').value = data.complemento || '';
+                    document.getElementById('bairro').value = data.bairro || '';
+                    document.getElementById('municipio').value = data.municipio || '';
+                    document.getElementById('uf').value = data.uf || '';
+                })
+                .catch(error => alert(error))
+                .finally(() => {
+                    this.disabled = false;
+                    button.disabled = false;
+                    button.innerHTML = 'Salvar';
+                });
+        });
     }
 
-    cnpjInput.addEventListener('blur', function () {
-        const cnpj = this.value.replace(/[^0-9]/g, '');
+    // AJAX Form Submission Logic
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
 
-        if (cnpj.length !== 14) {
-            return; // CNPJ inválido
-        }
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            button.innerHTML = 'Salvando...';
 
-        // Adiciona um feedback de carregamento
-        this.disabled = true;
-        const button = document.querySelector('button[type="submit"]');
-        button.disabled = true;
-        button.innerHTML = 'Buscando CNPJ...';
+            // Limpar erros antigos
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            // Tratar checkbox
+            data.ativo = document.getElementById('ativo').checked;
 
 
-        fetch(`https://brasilapi.com.br/api/cnpj/v1/${cnpj}`)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('CNPJ não encontrado ou inválido.');
-                }
-                return response.json();
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': data.csrf_test_name // Assumindo que o nome do token é 'csrf_test_name'
+                },
+                body: JSON.stringify(data)
             })
-            .then(data => {
-                // Preencher os campos do formulário
-                document.getElementById('razao_social').value = data.razao_social || '';
-                document.getElementById('nome_fantasia').value = data.nome_fantasia || '';
-                document.getElementById('email').value = data.email || '';
-                document.getElementById('telefone').value = data.ddd_telefone_1 || '';
-                document.getElementById('cep').value = data.cep || '';
-                document.getElementById('logradouro').value = data.logradouro || '';
-                document.getElementById('numero').value = data.numero || '';
-                document.getElementById('complemento').value = data.complemento || '';
-                document.getElementById('bairro').value = data.bairro || '';
-                document.getElementById('municipio').value = data.municipio || '';
-                document.getElementById('uf').value = data.uf || '';
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    alert(result.message);
+                    window.location.href = '{{ base_url("empresas") }}';
+                } else if (result.status === 'error' && result.code === 422) {
+                    // Erros de validação
+                    for (const field in result.data) {
+                        const errorDiv = document.querySelector(`#${field} + .text-danger`);
+                        if(errorDiv) {
+                           errorDiv.textContent = result.data[field];
+                        } else {
+                           // Adicionar o div de erro se não existir
+                           const input = document.getElementById(field);
+                           const newErrorDiv = document.createElement('div');
+                           newErrorDiv.className = 'text-danger';
+                           newErrorDiv.textContent = result.data[field];
+                           input.parentNode.appendChild(newErrorDiv);
+                        }
+                    }
+                     alert(result.message);
+                } else {
+                    // Outros erros
+                    alert(result.message || 'Ocorreu um erro inesperado.');
+                }
             })
             .catch(error => {
-                alert(error.message);
+                console.error('Erro:', error);
+                alert('Ocorreu um erro de comunicação com o servidor.');
             })
             .finally(() => {
-                // Restaura o estado normal
-                this.disabled = false;
                 button.disabled = false;
                 button.innerHTML = 'Salvar';
             });
-    });
+        });
+    }
 });
 </script>
 {% endblock %}

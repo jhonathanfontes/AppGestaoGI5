@@ -81,3 +81,61 @@
         </div>
     </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.querySelector('form');
+
+    if (form) {
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const button = form.querySelector('button[type="submit"]');
+            button.disabled = true;
+            button.innerHTML = 'Salvando...';
+
+            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': data.csrf_test_name
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.status === 'success') {
+                    alert(result.message);
+                    window.location.href = '{{ base_url("pessoas") }}';
+                } else if (result.status === 'error' && result.code === 422) {
+                    for (const field in result.data) {
+                        const errorDiv = document.querySelector(`#${field} + .text-danger`);
+                        if(errorDiv) {
+                           errorDiv.textContent = result.data[field];
+                        }
+                    }
+                    alert(result.message);
+                } else {
+                    alert(result.message || 'Ocorreu um erro inesperado.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro de comunicação com o servidor.');
+            })
+            .finally(() => {
+                button.disabled = false;
+                button.innerHTML = 'Salvar';
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

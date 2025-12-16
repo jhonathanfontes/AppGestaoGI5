@@ -35,25 +35,43 @@ class PessoaController extends BaseController
 
     public function create()
     {
-        $data = [
-            'empresa_id' => $this->request->getPost('empresa_id'),
-            'tipo' => $this->request->getPost('tipo'),
-            'nome' => $this->request->getPost('nome'),
-            'cpf_cnpj' => $this->request->getPost('cpf_cnpj'),
-            'email' => $this->request->getPost('email'),
-            'rg_ie' => $this->request->getPost('rg_ie'),
-            'data_nascimento' => $this->request->getPost('data_nascimento'),
-        ];
+        // Pega os dados da requisição (JSON)
+        $data = $this->request->getJSON(true);
 
         // Adicionar o usuário logado como criador
         $data['criado_por'] = session('user.id');
 
         $pessoaModel = new PessoaModel();
 
-        if ($pessoaModel->insert($data) === false) {
-            return redirect()->back()->withInput()->with('errors', $pessoaModel->errors());
-        }
+        try {
+            if ($pessoaModel->insert($data) === false) {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Erro de validação',
+                    'data' => $pessoaModel->errors(),
+                    'code' => 422
+                ];
+                return $this->response->setJSON($response)->setStatusCode(422);
+            }
 
-        return redirect()->to('/pessoas');
+            $newPessoaId = $pessoaModel->getInsertID();
+            $pessoa = $pessoaModel->find($newPessoaId);
+
+            $response = [
+                'status' => 'success',
+                'message' => 'Pessoa criada com sucesso!',
+                'data' => $pessoa
+            ];
+            return $this->response->setJSON($response);
+
+        } catch (\Exception $e) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Ocorreu um erro inesperado',
+                'data' => (ENVIRONMENT === 'development') ? $e->getMessage() : null,
+                'code' => 500
+            ];
+            return $this->response->setJSON($response)->setStatusCode(500);
+        }
     }
 }
