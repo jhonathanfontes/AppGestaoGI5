@@ -67,3 +67,7 @@
 #--------------------------------------------------------------------
 
 # logger.threshold = 4
+
+# Versão dos arquivos CSS e JS para forçar o recarregamento no navegador
+app.cssVersion = 1.0.1 
+app.jsVersion = 1.0.1
