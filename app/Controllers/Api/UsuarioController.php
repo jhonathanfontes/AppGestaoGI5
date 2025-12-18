@@ -12,50 +12,37 @@ class UsuarioController extends BaseController
      *
      * @return ResponseInterface
      */
-    public function create()
+
+    public function getAll()
     {
-        // 1. Validar se o content-type é application/json
-        if ($this->request->getHeaderLine('Content-Type') !== 'application/json') {
+        try {
+            $usuario = new UsuarioModel();
+            $data = $usuario->findAll();
+            return $this->respondSuccess($data, 'Busca de usuários realizada com sucesso.');
+        } catch (\Exception $e) {
             return $this->respondError(
-                'Content-Type inválido. Apenas application/json é aceito.',
-                ResponseInterface::HTTP_UNSUPPORTED_MEDIA_TYPE
+                'Ocorreu um erro ao buscar os usuários.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                null,
+                $e
             );
         }
+    }
 
-        // 2. Obter e validar o JSON
-        $data = $this->request->getJSON(true);
-        if (empty($data)) {
-            return $this->respondError('O corpo da requisição está vazio ou o JSON é inválido.', ResponseInterface::HTTP_BAD_REQUEST);
-        }
-
-        // A lógica de 'criado_por' via session foi removida para manter a API stateless.
-        // Se a autoria for necessária, deve ser enviada no corpo do JSON ou
-        // identificada por um mecanismo de autenticação de API (ex: token JWT).
-
-        $userModel = new UsuarioModel();
-
+    public function show($id = null)
+    {
         try {
-            // 3. Tentar inserir os dados
-            if ($userModel->insert($data) === false) {
-                // Se a inserção falhar, retorna os erros de validação do modelo
-                return $this->respondValidationErrors($userModel->errors());
-            }
-
-            // 4. Retornar sucesso com os dados do usuário criado
-            $newUserId = $userModel->getInsertID();
-            $user = $userModel->find($newUserId);
-
-            return $this->respondSuccess($user, 'Usuário criado com sucesso!', ResponseInterface::HTTP_CREATED);
-
+            $usuario = new UsuarioModel();
+            $data = $usuario->find($id);
+            return $this->respondSuccess($data, 'Busca de usuário realizada com sucesso.');
         } catch (\Exception $e) {
-            // 5. Tratar exceções inesperadas
-            $errorMessage = (ENVIRONMENT === 'development')
-                ? 'Ocorreu um erro inesperado: ' . $e->getMessage()
-                : 'Ocorreu um erro interno no servidor.';
-            
-            log_message('error', '[API] Erro ao criar usuário: ' . $e->getMessage());
-
-            return $this->respondError($errorMessage, ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->respondError(
+                'Ocorreu um erro ao buscar o usuário.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                null,
+                $e
+            );
         }
     }
+
 }

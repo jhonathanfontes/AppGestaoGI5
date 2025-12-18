@@ -65,8 +65,51 @@ class UsuarioController extends BaseController
 
     public function create()
     {
+         // Pega os dados da requisição (JSON)
+            $data = $this->request->getPost();
+
+            $userModel = new UsuarioModel();
+
+            try {
+                if ($userModel->insert($data) === false) {
+                    $response = [
+                        'status' => 'error',
+                        'message' => 'Erro de validação',
+                        'data' => $userModel->errors(),
+                        'code' => 422
+                    ];
+                    return $this->response->setJSON($response)->setStatusCode(422);
+                }
+    
+                $newUserId = $userModel->getInsertID();
+                $user = $userModel->find($newUserId);
+    
+                $response = [
+                    'status' => 'success',
+                    'message' => 'Usuário criado com sucesso!',
+                    'data' => $user
+                ];
+                return $this->response->setJSON($response);
+    
+            } catch (\Exception $e) {
+                $response = [
+                    'status' => 'error',
+                    'message' => 'Ocorreu um erro inesperado',
+                    'data' => (ENVIRONMENT === 'development') ? $e->getMessage() : null,
+                    'code' => 500
+                ];
+                return $this->response->setJSON($response)->setStatusCode(500);
+            }
+         
+    }
+
+    public function create2()
+    {
         // Pega os dados da requisição (JSON)
         $data = $this->request->getJSON(true);
+
+        dd($data);
+        exit;
         
         // Renomeia 'password' para 'senha' para consistência com o novo schema
         if(isset($data['password'])) {

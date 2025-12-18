@@ -2,11 +2,19 @@
 
 namespace App\Controllers\Api;
 
-use CodeIgniter\RESTful\ResourceController;
+use App\Services\ResponseService;
 use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
 class BaseController extends ResourceController
 {
+    protected ResponseService $responseService;
+
+    public function __construct()
+    {
+        $this->responseService = new ResponseService(response());
+    }
+
     /**
      * Retorna uma resposta JSON de sucesso.
      *
@@ -17,14 +25,7 @@ class BaseController extends ResourceController
      */
     protected function respondSuccess($data = null, string $message = 'Operação realizada com sucesso.', int $code = 200): ResponseInterface
     {
-        $response = [
-            'success' => true,
-            'message' => $message,
-            'data'    => $data,
-            'code'    => $code,
-        ];
-
-        return $this->respond($response, $code);
+        return $this->responseService->success($data, $message, $code);
     }
 
     /**
@@ -33,18 +34,12 @@ class BaseController extends ResourceController
      * @param string|array $message Mensagem de erro ou array de mensagens.
      * @param int $code Código de status HTTP.
      * @param mixed|null $data Dados adicionais, se houver.
+     * @param \Throwable|null $exception
      * @return ResponseInterface
      */
-    protected function respondError($message, int $code = 400, $data = null): ResponseInterface
+    protected function respondError($message, int $code = 400, $data = null, ?\Throwable $exception = null): ResponseInterface
     {
-        $response = [
-            'success' => false,
-            'message' => $message,
-            'data'    => $data,
-            'code'    => $code,
-        ];
-
-        return $this->respond($response, $code);
+        return $this->responseService->error($message, $data, $code, $exception);
     }
 
     /**
@@ -89,6 +84,6 @@ class BaseController extends ResourceController
      */
     protected function respondValidationErrors(array $errors, string $message = 'Erro de validação.'): ResponseInterface
     {
-        return $this->respondError($message, ResponseInterface::HTTP_BAD_REQUEST, ['errors' => $errors]);
+        return $this->responseService->validation($errors, $message);
     }
 }

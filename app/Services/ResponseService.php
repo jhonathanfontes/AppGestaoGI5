@@ -63,7 +63,9 @@ class ResponseService
             ] : null);
         } else {
             // Produção → mensagem amigável
-            $payload['errors'] = null;
+            $payload['errors'] = [
+                'message'   => $exception->getMessage(),
+            ];
         }
 
         return $this->respond($payload, $statusCode);

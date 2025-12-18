@@ -45,13 +45,14 @@ class PessoaController extends BaseController
 
         } catch (\Exception $e) {
             // 5. Tratar exceções inesperadas
-            $errorMessage = (ENVIRONMENT === 'development')
-                ? 'Ocorreu um erro inesperado: ' . $e->getMessage()
-                : 'Ocorreu um erro interno no servidor.';
-            
             log_message('error', '[API] Erro ao criar pessoa: ' . $e->getMessage());
 
-            return $this->respondError($errorMessage, ResponseInterface::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->respondError(
+                'Ocorreu um erro interno no servidor.',
+                ResponseInterface::HTTP_INTERNAL_SERVER_ERROR,
+                null,
+                $e
+            );
         }
     }
 }
